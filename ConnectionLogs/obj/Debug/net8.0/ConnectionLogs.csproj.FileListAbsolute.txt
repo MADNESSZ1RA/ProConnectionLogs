@@ -1,0 +1,12 @@
+F:\шарп\ConnectionLogs\ConnectionLogs\bin\Debug\net8.0\ConnectionLogs.deps.json
+F:\шарп\ConnectionLogs\ConnectionLogs\bin\Debug\net8.0\ConnectionLogs.dll
+F:\шарп\ConnectionLogs\ConnectionLogs\bin\Debug\net8.0\ConnectionLogs.pdb
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.csproj.AssemblyReference.cache
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.GeneratedMSBuildEditorConfig.editorconfig
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.AssemblyInfoInputs.cache
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.AssemblyInfo.cs
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.csproj.CoreCompileInputs.cache
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.dll
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\refint\ConnectionLogs.dll
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ConnectionLogs.pdb
+F:\шарп\ConnectionLogs\ConnectionLogs\obj\Debug\net8.0\ref\ConnectionLogs.dll
