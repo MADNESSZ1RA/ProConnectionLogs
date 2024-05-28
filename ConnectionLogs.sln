@@ -1,0 +1,25 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectionLogs", "ConnectionLogs\ConnectionLogs.csproj", "{DFAA1F45-E6D8-4742-AB2A-41B1ACB2977A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFAA1F45-E6D8-4742-AB2A-41B1ACB2977A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFAA1F45-E6D8-4742-AB2A-41B1ACB2977A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFAA1F45-E6D8-4742-AB2A-41B1ACB2977A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFAA1F45-E6D8-4742-AB2A-41B1ACB2977A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4AF40CF7-8559-432F-A9D8-A32F58C71C1F}
+	EndGlobalSection
+EndGlobal
