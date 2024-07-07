@@ -32,8 +32,6 @@ public class HelloWorldPlugin : BasePlugin
             var _PlayerSteamId64 = @event.Userid.SteamID;
             var _AdminStatus = CheckAdminStatus(SteamId32To64(_PlayerSteamId32));
             var _VIPStatus = CheckVipStatus(_PlayerSteamId32);
-            // var _AdminStatus = "pidoras";
-            // var _VIPStatus = "Pidoras po jizni";
 
             if (@event.Userid.IsValid)
             {
@@ -115,7 +113,7 @@ public class HelloWorldPlugin : BasePlugin
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                string groupname = reader.GetString("group");  // Изменено с "name" на "group"
+                string groupname = reader.GetString("group");
                 Logger.LogInformation("Ответ от бд - " + groupname);
                 return groupname;
             }
@@ -144,7 +142,7 @@ public class HelloWorldPlugin : BasePlugin
                         new
                         {
                             title = "Членикс подключился",
-                            description = "IP Сервера - 46.8.220.103:27015",  // Замените на необходимое значение IP
+                            description = "Discord Pro Connection Logs",
                             color = 255,
                             fields = new[]
                             {
