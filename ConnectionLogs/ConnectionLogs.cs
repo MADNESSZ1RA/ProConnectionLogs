@@ -14,7 +14,7 @@ public class HelloWorldPlugin : BasePlugin
 {
     public override string ModuleAuthor => "ZIRA";
     public override string ModuleName => "[Discord] Pro Connection Logs";
-    public override string ModuleVersion => "v1.0";
+    public override string ModuleVersion => "v1.1";
 
     private Config _config = null!;
 
