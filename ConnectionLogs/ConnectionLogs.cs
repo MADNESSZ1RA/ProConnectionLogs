@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -14,7 +14,7 @@ public class HelloWorldPlugin : BasePlugin
 {
     public override string ModuleAuthor => "ZIRA";
     public override string ModuleName => "[Discord] Pro Connection Logs";
-    public override string ModuleVersion => "v0.5";
+    public override string ModuleVersion => "v1.0";
 
     private Config _config = null!;
 
@@ -23,7 +23,7 @@ public class HelloWorldPlugin : BasePlugin
         _config = LoadConfig();
     }
     [GameEventHandler]
-    public HookResult OnPlayerConnect(EventPlayerConnect @event, GameEventInfo info)
+    public HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
     {
         if (@event.Userid != null && @event.Userid.IsValid)
         {
@@ -115,7 +115,7 @@ public class HelloWorldPlugin : BasePlugin
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                string groupname = reader.GetString("name");
+                string groupname = reader.GetString("group");  // Изменено с "name" на "group"
                 Logger.LogInformation("Ответ от бд - " + groupname);
                 return groupname;
             }
