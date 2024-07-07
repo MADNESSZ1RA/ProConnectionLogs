@@ -14,7 +14,7 @@ public class HelloWorldPlugin : BasePlugin
 {
     public override string ModuleAuthor => "ZIRA";
     public override string ModuleName => "[Discord] Pro Connection Logs";
-    public override string ModuleVersion => "v1.1";
+    public override string ModuleVersion => "v1.2";
 
     private Config _config = null!;
 
@@ -43,7 +43,7 @@ public class HelloWorldPlugin : BasePlugin
             }
             else
             {
-                Logger.LogInformation("Error on player connect");
+                Logger.LogInformation("Ошибка при подключении игрока");
             }
         }
         return HookResult.Continue;
@@ -82,7 +82,7 @@ public class HelloWorldPlugin : BasePlugin
             else
             {
                 Logger.LogInformation("Ответ от бд - " + "No results found");
-                return "Нет админки";
+                return "Нет админ привелегии";
             }
         }
         catch (Exception ex)
@@ -120,7 +120,7 @@ public class HelloWorldPlugin : BasePlugin
             else
             {
                 Logger.LogInformation("Ответ от бд - " + "No results found");
-                return "Нет випки";
+                return "Нет вип привелегии";
             }
         }
         catch (Exception ex)
@@ -131,7 +131,7 @@ public class HelloWorldPlugin : BasePlugin
     }
     public async void SendMessageToDiscord(string WebhookUrl, string PlayerName, int PlayerId, string AdminStatus, string VIPStatus)
     {
-        Logger.LogInformation("trying to send message");
+        Logger.LogInformation("Пытаюсь отправить сообщение в дискорд");
         try
         {
             using var httpClient = new HttpClient();
@@ -141,7 +141,7 @@ public class HelloWorldPlugin : BasePlugin
                 {
                         new
                         {
-                            title = "Членикс подключился",
+                            title = "Игрок подключился.",
                             description = "Discord Pro Connection Logs",
                             color = 255,
                             fields = new[]
@@ -189,7 +189,7 @@ public class HelloWorldPlugin : BasePlugin
             JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
 
         Console.ForegroundColor = ConsoleColor.DarkGreen;
-        Console.WriteLine("[ReportSystem] The configuration was successfully saved to a file: " + configPath);
+        Console.WriteLine("[ReportSystem] Конфиг успешно сохранён: " + configPath);
         Console.ResetColor();
 
         return config;
