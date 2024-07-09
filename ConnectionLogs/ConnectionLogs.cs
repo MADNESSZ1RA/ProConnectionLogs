@@ -12,7 +12,7 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Modules.Events;
 
-namespace HelloWorldPlugin
+namespace ProConnectionLogsPlugin
 {
     public class HelloWorldPlugin : BasePlugin
     {
