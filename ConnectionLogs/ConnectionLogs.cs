@@ -17,7 +17,7 @@ namespace ProConnectionLogsPlugin
     {
         public override string ModuleAuthor => "ZIRA";
         public override string ModuleName => "[Discord] Pro Connection Logs";
-        public override string ModuleVersion => "v2.0";
+        public override string ModuleVersion => "v2.1";
         
         private Config _config = null!;
         private readonly Dictionary<int, PlayerInfo> _playerInfos = new();
