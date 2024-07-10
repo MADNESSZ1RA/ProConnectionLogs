@@ -9,19 +9,18 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
 using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core.Attributes;
-using CounterStrikeSharp.API.Modules.Events;
+
 
 namespace ProConnectionLogsPlugin
 {
-    public class HelloWorldPlugin : BasePlugin
+    public class ProConnectionLogsPlugin : BasePlugin
     {
         public override string ModuleAuthor => "ZIRA";
         public override string ModuleName => "[Discord] Pro Connection Logs";
         public override string ModuleVersion => "v2.0";
-
+        
         private Config _config = null!;
-        private readonly Dictionary<int, DateTime> _playerConnectTimes = new();
+        private readonly Dictionary<int, PlayerInfo> _playerInfos = new();
 
         public override void Load(bool hotReload)
         {
@@ -29,24 +28,47 @@ namespace ProConnectionLogsPlugin
             RegisterListener<Listeners.OnClientDisconnect>(OnClientDisconnect);
         }
 
+        private struct PlayerInfo
+        {
+            public string PlayerName;
+            public long SteamId64;
+            public string AdminStatus;
+            public string VipStatus;
+            public DateTime ConnectTime;
+        }
+
         [GameEventHandler]
         public HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
         {
             if (@event.Userid != null && @event.Userid.IsValid)
             {
-                var playerName = @event.Userid.PlayerName;
-                var playerSteamId32 = (int)@event.Userid.SteamID;
-                var playerSteamId64 = @event.Userid.SteamID;
-                var adminStatus = CheckAdminStatus(SteamId32To64(playerSteamId32));
-                var vipStatus = CheckVipStatus(playerSteamId32);
+                try
+                {
+                    var playerName = @event.Userid.PlayerName;
+                    var playerSteamId32 = (int)@event.Userid.SteamID;
+                    var playerSteamId64 = (long)@event.Userid.SteamID;
+                    var adminStatus = CheckAdminStatus(SteamId32To64(playerSteamId32));
+                    var vipStatus = CheckVipStatus(playerSteamId32);
 
-                Logger.LogInformation($"NAME = {playerName}");
-                Logger.LogInformation($"ID32 = {playerSteamId32}");
-                Logger.LogInformation($"ID64 = {playerSteamId64}");
+                    Logger.LogInformation($"NAME = {playerName}");
+                    Logger.LogInformation($"ID32 = {playerSteamId32}");
+                    Logger.LogInformation($"ID64 = {playerSteamId64}");
 
-                _playerConnectTimes[playerSteamId32] = DateTime.Now;
+                    _playerInfos[playerSteamId32] = new PlayerInfo
+                    {
+                        PlayerName = playerName,
+                        SteamId64 = playerSteamId64,
+                        AdminStatus = adminStatus,
+                        VipStatus = vipStatus,
+                        ConnectTime = DateTime.Now
+                    };
 
-                SendToDiscord(_config.ConnectWebhookUrl, "Игрок подключился.", playerName, playerSteamId32, adminStatus, vipStatus);
+                    SendToDiscord(_config.ConnectWebhookUrl, "Игрок подключился.", playerName, playerSteamId32, adminStatus, vipStatus);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogInformation($"Ошибка в отправке сообщении о подключении {ex}");
+                }
             }
             else
             {
@@ -61,26 +83,25 @@ namespace ProConnectionLogsPlugin
 
             if (player != null)
             {
-                var playerName = player.PlayerName;
                 var playerSteamId32 = (int)player.SteamID;
-                var playerSteamId64 = player.SteamID;
-                var adminStatus = CheckAdminStatus(SteamId32To64(playerSteamId32));
-                var vipStatus = CheckVipStatus(playerSteamId32);
 
-                Logger.LogInformation($"NAME = {playerName}");
-                Logger.LogInformation($"ID32 = {playerSteamId32}");
-                Logger.LogInformation($"ID64 = {playerSteamId64}");
-
-                if (_playerConnectTimes.TryGetValue(playerSteamId32, out var connectTime))
+                if (_playerInfos.TryGetValue(playerSteamId32, out var playerInfo))
                 {
-                    var playTime = DateTime.Now - connectTime;
-                    _playerConnectTimes.Remove(playerSteamId32);
-                    SendToDiscord(_config.DisconnectWebhookUrl, "Игрок отключился.", playerName, playerSteamId32, adminStatus, vipStatus, playTime);
+                    try
+                    {
+                        var playTime = DateTime.Now - playerInfo.ConnectTime;
+                        _playerInfos.Remove(playerSteamId32);
+
+                        SendToDiscord(_config.DisconnectWebhookUrl, "Игрок отключился.", playerInfo.PlayerName, playerSteamId32, playerInfo.AdminStatus, playerInfo.VipStatus, playTime);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogInformation($"Ошибка в отправке сообщения об отключении {ex}");
+                    }
                 }
                 else
                 {
-                    Logger.LogInformation("Не удалось определить время подключения игрока");
-                    SendToDiscord(_config.DisconnectWebhookUrl, "Игрок отключился.", playerName, playerSteamId32, adminStatus, vipStatus);
+                    Logger.LogInformation("Не удалось определить информацию о подключении игрока");
                 }
             }
             else
@@ -91,7 +112,7 @@ namespace ProConnectionLogsPlugin
 
         private string CheckAdminStatus(long sid)
         {
-            Logger.LogInformation($"айдишник типа для бд - {sid}");
+            Logger.LogInformation($"Айди игрока для бд - {sid}");
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = _config.LKSAdminHost,
@@ -122,7 +143,7 @@ namespace ProConnectionLogsPlugin
                 else
                 {
                     Logger.LogInformation("Ответ от бд - No results found");
-                    return "Нет админ привелегии";
+                    return "Нет админ привилегии";
                 }
             }
             catch (Exception ex)
@@ -161,7 +182,7 @@ namespace ProConnectionLogsPlugin
                 else
                 {
                     Logger.LogInformation("Ответ от бд - No results found");
-                    return "Нет вип привелегии";
+                    return "Нет вип привилегии";
                 }
             }
             catch (Exception ex)
@@ -213,7 +234,21 @@ namespace ProConnectionLogsPlugin
                 throw;
             }
         }
+        private static long SteamId32To64(int steamId)
+        {
+            return steamId | 76561197960265728L;
+        }
+        private static int SteamId64To32(long steamId)
+        {
+            return (int)((steamId << 32) >> 32);
+        }
+        private Config LoadConfig()
+        {
+            var configPath = Path.Combine(ModuleDirectory, "settings.json");
+            if (!File.Exists(configPath)) return CreateConfig(configPath);
 
+            return JsonSerializer.Deserialize<Config>(File.ReadAllText(configPath))!;
+        }
         private Config CreateConfig(string configPath)
         {
             var config = new Config
@@ -229,34 +264,21 @@ namespace ProConnectionLogsPlugin
                 PisexVipdbName = "",
                 PisexVipPassword = "",
             };
+            try
+            {
+                File.WriteAllText(configPath,
+                    JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
 
-            File.WriteAllText(configPath,
-                JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("[ReportSystem] Конфиг успешно сохранён: " + configPath);
+                Console.ResetColor();
 
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("[ReportSystem] Конфиг успешно сохранён: " + configPath);
-            Console.ResetColor();
-
+            }
+            catch (Exception ex) 
+            {
+                Logger.LogError($"{ex}");
+            }
             return config;
-        }
-
-        private Config LoadConfig()
-        {
-            var configPath = Path.Combine(ModuleDirectory, "settings.json");
-
-            if (!File.Exists(configPath)) return CreateConfig(configPath);
-
-            return JsonSerializer.Deserialize<Config>(File.ReadAllText(configPath))!;
-        }
-
-        private static long SteamId32To64(int steamId)
-        {
-            return steamId | 76561197960265728L;
-        }
-
-        private static int SteamId64To32(long steamId)
-        {
-            return (int)((steamId << 32) >> 32);
         }
 
         public class Config
@@ -265,8 +287,8 @@ namespace ProConnectionLogsPlugin
             public required string DisconnectWebhookUrl { get; set; }
             public required string LKSAdminHost { get; set; }
             public required string LKSAdminUser { get; set; }
-            public required string LKSAdmindbName { get; set; }
             public required string LKSAdminPassword { get; set; }
+            public required string LKSAdmindbName { get; set; }
             public required string PisexVipHost { get; set; }
             public required string PisexVipUser { get; set; }
             public required string PisexVipPassword { get; set; }
