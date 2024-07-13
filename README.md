@@ -4,7 +4,7 @@ Make sure that you have configured a config file in plugin`s catalog.
 
 
 Phrases config example:
-```{
+```
   "Player": "Player:",
   "PlayerConnect": "Player connected",
   "PlayerDisConnect": "Player disconnected",
@@ -17,4 +17,4 @@ Phrases config example:
   "Url": "Url:",
   "UrlClick": "click to open steam profile",
   "PlayerTime": "Played time:"
-}```
+```
