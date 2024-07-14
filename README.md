@@ -16,5 +16,8 @@ Phrases config example:
   "NoVip": "No vip",
   "Url": "Url:",
   "UrlClick": "click to open steam profile",
-  "PlayerTime": "Played time:"
+  "PlayerTime": "Played time:",
+  "Server": "Server",
+  "ServerIp": "46.8.220.103:27015",
+  "ServerName": "Only Mirage"
 ```
