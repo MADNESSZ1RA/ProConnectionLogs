@@ -215,8 +215,12 @@ namespace ProConnectionLogsPlugin
                                             $"**{_phrases.Admin}** {adminStatus}\n" +
                                             $"**{_phrases.Vip}** {vipStatus}\n" +
                                             playTimeString +
-                                            $"**{_phrases.Url}** [{_phrases.UrlClick}](https://steamcommunity.com/profiles/{SteamId32To64(playerId)})",
-                                    inline = false
+                                            $"**{_phrases.Url}** [{_phrases.UrlClick}](https://steamcommunity.com/profiles/{SteamId32To64(playerId)})\n\n" +
+
+                                            $"**{_phrases.Server}**\n"+
+                                            $"**IP:** {_phrases.ServerIp}\n" +
+                                            $"**Name:** {_phrases.ServerName}\n",
+                                    inline = false,
                                 }
                             }
                         }
@@ -299,7 +303,10 @@ namespace ProConnectionLogsPlugin
                 NoVip = "",
                 Url = "",
                 UrlClick = "",
-                PlayerTime = ""
+                PlayerTime = "",
+                Server = "",
+                ServerIp = "",
+                ServerName = "",
             };
             try
             {
@@ -331,6 +338,9 @@ namespace ProConnectionLogsPlugin
             public required string Url { get; set; }
             public required string UrlClick { get; set; }
             public required string PlayerTime { get; set; }
+            public required string Server { get; set; }
+            public required string ServerIp {  get; set; }
+            public required string ServerName { get; set; }
         }
         public class Config
         {
