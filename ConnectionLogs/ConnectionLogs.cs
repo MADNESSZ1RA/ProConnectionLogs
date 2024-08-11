@@ -10,10 +10,12 @@ using Microsoft.Extensions.Logging;
 using MySqlConnector;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Modules.Entities;
+using CounterStrikeSharp.API.Core.Attributes;
 
 
 namespace ProConnectionLogsPlugin
 {
+    [MinimumApiVersion(247)]
     public class ProConnectionLogsPlugin : BasePlugin
     {
         public override string ModuleAuthor => "ZIRA";
